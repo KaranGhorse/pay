@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donate to Hope Foundation - Make a Difference</title>
+    <meta name="description" content="Support Hope Foundation through a secure and easy online donation. Your contribution helps us empower communities.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0u/z8z8n+Jz8r2h1e91/n1mR5Vp8w3z/p6l3U12M/Q5a8QJ4p4f9d0c24+w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --primary-dark: #388E3C;
+            --primary-light: #81C784;
+            --primary-color-rgb: 76, 175, 80; /* For rgba calculations */
+
+            --accent-color: #FFC107;
+            --accent-color-rgb: 255, 193, 7; /* For rgba calculations */
+
+            --text-color-dark: #333;
+            --text-color-light: #555;
+            --bg-light: #f8f9fa;
+            --bg-white: #ffffff;
+            --border-color: #e0e0e0;
+            --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.08);
+            --shadow-medium: 0 8px 25px rgba(0, 0, 0, 0.12);
+            --success-color: #28a745;
+            --error-color: #dc3545;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color-dark);
+            background-color: var(--bg-light);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .header {
+            background-color: var(--bg-white);
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ngo-logo {
+            height: 40px;
+            width: auto;
+            border-radius: 5px;
+            object-fit: contain;
+        }
+
+        .ngo-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .donation-gateway {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 3rem 1rem;
+        }
+
+        .donation-card {
+            background-color: var(--bg-white);
+            border-radius: 12px;
+            box-shadow: var(--shadow-medium);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-title {
+            font-size: 2.2rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .card-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-color-light);
+            margin-bottom: 2rem;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            color: var(--text-color-dark);
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            text-align: left;
+        }
+
+        .amount-selection {
+            margin-bottom: 2rem;
+        }
+
+        .amount-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .amount-btn {
+            background-color: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-color-dark);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .amount-btn:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .amount-btn.active {
+            background-color: var(--primary-color);
+            color: var(--bg-white);
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 15px rgba(var(--primary-color-rgb), 0.2);
+            transform: translateY(-2px);
+        }
+
+        .custom-amount-input {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .custom-amount-input:focus-within {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.15);
+        }
+
+        .custom-amount-input span {
+            font-size: 1.1rem;
+            color: var(--text-color-light);
+            margin-right: 5px;
+        }
+
+        .custom-input {
+            flex-grow: 1;
+            border: none;
+            background: transparent;
+            font-size: 1.1rem;
+            color: var(--text-color-dark);
+            outline: none;
+            width: 100%;
+            -webkit-appearance: none; /* Hide spinner buttons */
+            -moz-appearance: textfield; /* Firefox specific */
+            appearance: none;
+        }
+        .custom-input::placeholder {
+            color: var(--text-color-light);
+            opacity: 0.7;
+        }
+
+        .payment-summary {
+            background-color: #e8f5e9;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            text-align: left;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--primary-dark);
+            border: 1px dashed var(--primary-light);
+        }
+
+        .payment-summary span {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .donation-form {
+            text-align: left;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color-dark);
+            font-size: 0.95rem;
+        }
+
+        .input-group input[type="text"],
+        .input-group input[type="email"],
+        .input-group input[type="tel"] {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            color: var(--text-color-dark);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.15);
+        }
+        
+        .input-group input::placeholder {
+            color: var(--text-color-light);
+            opacity: 0.7;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1rem 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .payment-option:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transform: translateY(-3px);
+        }
+
+        .payment-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .payment-option .payment-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .payment-option .payment-content i {
+            font-size: 1.8rem;
+            color: var(--text-color-light);
+            transition: color 0.3s ease;
+        }
+
+        .payment-option .payment-content .method-name {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-color-dark);
+            flex-grow: 1;
+        }
+
+        .payment-option input[type="radio"]:checked + .payment-content i {
+            color: var(--primary-color);
+        }
+
+        .payment-option input[type="radio"]:checked + .payment-content {
+            border-color: var(--primary-color);
+        }
+
+        .payment-option input[type="radio"]:checked + .payment-content::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 1.2rem;
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            animation: scaleIn 0.3s ease forwards;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+
+        .donate-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background-color: var(--primary-color);
+            color: var(--bg-white);
+            border: none;
+            border-radius: 10px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(var(--primary-color-rgb), 0.25);
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .donate-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 10px 30px rgba(var(--primary-color-rgb), 0.35);
+        }
+
+        .donate-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 15px rgba(var(--primary-color-rgb), 0.2);
+        }
+
+        .thank-you-message {
+            display: none;
+            margin-top: 3rem;
+            padding: 2.5rem;
+            background-color: #e8f5e9;
+            border: 2px solid var(--success-color);
+            border-radius: 12px;
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        .thank-you-message.show {
+            display: block;
+            animation: slideInUp 0.6s ease-out forwards;
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(50px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: var(--success-color);
+            margin-bottom: 1rem;
+            animation: popIn 0.5s ease-out forwards;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            70% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        .thank-you-message h3 {
+            font-size: 2rem;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .thank-you-message p {
+            font-size: 1.1rem;
+            color: var(--text-color-dark);
+            margin-bottom: 2rem;
+        }
+
+        .thank-you-message #finalDonationAmount {
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        .back-btn {
+            background-color: var(--accent-color);
+            color: var(--text-color-dark);
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(var(--accent-color-rgb), 0.2);
+        }
+
+        .back-btn:hover {
+            background-color: #fdd835;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(var(--accent-color-rgb), 0.3);
+        }
+
+        .footer {
+            margin-top: auto;
+            padding: 1.5rem 2rem;
+            background-color: var(--bg-white);
+            color: var(--text-color-light);
+            font-size: 0.9rem;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.03);
+        }
+
+        .footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .donation-card {
+                padding: 2rem 1.5rem;
+                max-width: 95%;
+            }
+
+            .card-title {
+                font-size: 1.8rem;
+            }
+
+            .card-subtitle {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            h3 {
+                font-size: 1.25rem;
+            }
+
+            .amount-options {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+                gap: 0.8rem;
+            }
+
+            .amount-btn, .custom-input, .payment-summary,
+            .input-group input, .payment-option .method-name {
+                font-size: 1rem;
+            }
+
+            .payment-option .payment-content i {
+                font-size: 1.5rem;
+            }
+
+            .donate-btn {
+                font-size: 1.2rem;
+                padding: 1rem;
+            }
+            
+            .thank-you-message h3 {
+                font-size: 1.6rem;
+            }
+
+            .thank-you-message p {
+                font-size: 1rem;
+            }
+
+            .success-icon {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 0.8rem 1rem;
+            }
+
+            .ngo-name {
+                font-size: 1.3rem;
+            }
+
+            .ngo-logo {
+                height: 35px;
+            }
+
+            .donation-gateway {
+                padding: 2rem 0.8rem;
+            }
+
+            .donation-card {
+                padding: 1.5rem 1rem;
+                border-radius: 8px;
+            }
+
+            .card-title {
+                font-size: 1.6rem;
+            }
+
+            .amount-options {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .input-group label {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo-container">
+            <img src="https://images.unsplash.com/photo-1543269865-cbf427ce4b93?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=140&h=40&q=80" alt="Hope Foundation Logo" class="ngo-logo">
+            <h1 class="ngo-name">Hope Foundation</h1>
+        </div>
+    </header>
+
+    <main class="donation-gateway">
+        <section class="donation-card">
+            <h2 class="card-title">Make a Donation</h2>
+            <p class="card-subtitle">Every contribution makes a difference!</p>
+
+            <div class="amount-selection">
+                <h3>Choose Amount</h3>
+                <div class="amount-options">
+                    <button class="amount-btn active" data-amount="500">₹500</button>
+                    <button class="amount-btn" data-amount="1000">₹1,000</button>
+                    <button class="amount-btn" data-amount="2000">₹2,000</button>
+                    <button class="amount-btn" data-amount="5000">₹5,000</button>
+                    <div class="custom-amount-input">
+                        <span>₹</span>
+                        <input type="number" id="customAmount" placeholder="Other Amount" min="100" class="custom-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="payment-summary">
+                <p>Donation Amount: <span id="displayAmount">₹500</span></p>
+            </div>
+
+            <form id="donationForm" class="donation-form">
+                <h3>Your Details</h3>
+                <div class="input-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" placeholder="John Doe" required>
+                </div>
+                <div class="input-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="john.doe@example.com" required>
+                </div>
+                <div class="input-group">
+                    <label for="phoneNumber">Phone Number (Optional)</label>
+                    <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="+91 9876543210">
+                </div>
+
+                <h3>Payment Method</h3>
+                <div class="payment-methods">
+                    <label class="payment-option">
+                        <input type="radio" name="paymentMethod" value="upi" checked>
+                        <span class="payment-content">
+                            <i class="fas fa-qrcode"></i>
+                            <span class="method-name">UPI (Google Pay, PhonePe, Paytm)</span>
+                        </span>
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="paymentMethod" value="card">
+                        <span class="payment-content">
+                            <i class="fas fa-credit-card"></i>
+                            <span class="method-name">Credit/Debit Card</span>
+                        </span>
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="paymentMethod" value="netbanking">
+                        <span class="payment-content">
+                            <i class="fas fa-university"></i>
+                            <span class="method-name">Net Banking</span>
+                        </span>
+                    </label>
+                </div>
+
+                <button type="submit" class="donate-btn">Donate Now</button>
+            </form>
+
+            <div id="thankYouMessage" class="thank-you-message">
+                <i class="fas fa-check-circle success-icon"></i>
+                <h3>Thank You for Your Generous Donation!</h3>
+                <p>Your contribution of <span id="finalDonationAmount"></span> will help us make a significant impact.</p>
+                <button class="back-btn">Donate Again</button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; <span id="currentYear"></span> Hope Foundation. All rights reserved. <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const amountBtns = document.querySelectorAll('.amount-btn');
+            const customAmountInput = document.getElementById('customAmount');
+            const displayAmountSpan = document.getElementById('displayAmount');
+            const donationForm = document.getElementById('donationForm');
+            const thankYouMessage = document.getElementById('thankYouMessage');
+            const finalDonationAmountSpan = document.getElementById('finalDonationAmount');
+            const backBtn = document.querySelector('.thank-you-message .back-btn');
+            const ngoNameElement = document.querySelector('.ngo-name');
+            const ngoLogoElement = document.querySelector('.ngo-logo');
+
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+            const ngoDetails = {
+                name: "Hope Foundation",
+                logoUrl: "https://images.unsplash.com/photo-1543269865-cbf427ce4b93?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=140&h=40&q=80",
+                primaryMission: "empowering communities",
+            };
+
+            ngoNameElement.textContent = ngoDetails.name;
+            ngoLogoElement.src = ngoDetails.logoUrl;
+            ngoLogoElement.alt = `${ngoDetails.name} Logo`;
+            document.title = `Donate to ${ngoDetails.name} - Make a Difference`;
+            document.querySelector('meta[name="description"]').content = `Support ${ngoDetails.name} through a secure and easy online donation. Your contribution helps us ${ngoDetails.primaryMission}.`;
+
+
+            let selectedAmount = 500;
+
+            displayAmountSpan.textContent = `₹${selectedAmount.toLocaleString('en-IN')}`;
+
+            amountBtns.forEach(button => {
+                button.addEventListener('click', () => {
+                    amountBtns.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    selectedAmount = parseInt(button.dataset.amount);
+                    displayAmountSpan.textContent = `₹${selectedAmount.toLocaleString('en-IN')}`;
+                    customAmountInput.value = '';
+                });
+            });
+
+            customAmountInput.addEventListener('input', () => {
+                amountBtns.forEach(btn => btn.classList.remove('active'));
+
+                let value = parseInt(customAmountInput.value);
+                if (isNaN(value) || value < 100) {
+                    selectedAmount = 0;
+                    displayAmountSpan.textContent = '₹0';
+                } else {
+                    selectedAmount = value;
+                    displayAmountSpan.textContent = `₹${selectedAmount.toLocaleString('en-IN')}`;
+                }
+            });
+
+            donationForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const fullName = document.getElementById('fullName').value.trim();
+                const email = document.getElementById('email').value.trim();
+
+                if (!fullName) {
+                    alert('Please enter your full name.');
+                    document.getElementById('fullName').focus();
+                    return;
+                }
+                if (!email || !/\S+@\S+\.\S+/.test(email)) {
+                    alert('Please enter a valid email address.');
+                    document.getElementById('email').focus();
+                    return;
+                }
+                if (selectedAmount <= 0) {
+                    alert('Please select or enter a valid donation amount (minimum ₹100 for custom amounts).');
+                    return;
+                }
+
+                console.log('Donation Details:', {
+                    amount: selectedAmount,
+                    fullName: fullName,
+                    email: email,
+                    phoneNumber: document.getElementById('phoneNumber').value.trim(),
+                    paymentMethod: document.querySelector('input[name="paymentMethod"]:checked').value
+                });
+
+                donationForm.style.display = 'none';
+                thankYouMessage.classList.add('show');
+                finalDonationAmountSpan.textContent = `₹${selectedAmount.toLocaleString('en-IN')}`;
+
+                thankYouMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+
+            backBtn.addEventListener('click', () => {
+                thankYouMessage.classList.remove('show');
+                donationForm.style.display = 'block';
+                donationForm.reset();
+                
+                amountBtns.forEach(btn => btn.classList.remove('active'));
+                amountBtns[0].classList.add('active');
+                selectedAmount = parseInt(amountBtns[0].dataset.amount);
+                displayAmountSpan.textContent = `₹${selectedAmount.toLocaleString('en-IN')}`;
+                customAmountInput.value = '';
+
+                donationForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+        });
+    </script>
+</body>
+</html>
