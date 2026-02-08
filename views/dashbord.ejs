@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<h1>💳 Payment Admin Panel</h1>
+
+<div class="cards">
+  <div class="card">
+    <h3>Total Amount</h3>
+    <p>₹ <%= totalAmount %></p>
+  </div>
+
+  <div class="card">
+    <h3>Total Transactions</h3>
+    <p><%= totalTxn %></p>
+  </div>
+
+  <div class="card success">
+    <h3>Success</h3>
+    <p><%= successCount %></p>
+  </div>
+
+  <div class="card failed">
+    <h3>Failed</h3>
+    <p><%= failedCount %></p>
+  </div>
+</div>
+
+<button onclick="window.print()">🖨️ Print Report</button>
+
+<table>
+  <thead>
+    <tr>
+      <th>Order ID</th>
+      <th>Payment ID</th>
+      <th>Amount</th>
+      <th>Status</th>
+      <th>Date</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% payments.forEach(p => { %>
+      <tr>
+        <td><%= p.orderId %></td>
+        <td><%= p.paymentId %></td>
+        <td>₹ <%= p.amount %></td>
+
+        <td class="<%= p.status === 'SUCCESS' ? 'green' : 'red' %>">
+          <%= p.status %>
+        </td>
+
+        <td><%= new Date(p.createdAt).toLocaleString() %></td>
+
+        <td>
+          <% if (p.status === "SUCCESS") { %>
+            <a href="/success/<%= p._id %>" class="btn-print">
+              🖨️ Print
+            </a>
+          <% } else { %>
+            —
+          <% } %>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+
+</body>
+</html>

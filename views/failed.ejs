@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment Failed</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f6f8fb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      background: #fff;
+      padding: 35px 30px;
+      max-width: 420px;
+      width: 90%;
+      text-align: center;
+      border-radius: 14px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+    }
+
+    .icon {
+      font-size: 60px;
+      color: #e74c3c;
+    }
+
+    h1 {
+      margin: 15px 0 10px;
+      color: #333;
+    }
+
+    p {
+      color: #666;
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 25px;
+    }
+
+    .btn {
+      padding: 12px 22px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .btn-primary {
+      background: #e74c3c;
+      color: #fff;
+      margin-right: 10px;
+    }
+
+    .btn-secondary {
+      background: #ecf0f1;
+      color: #333;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .support {
+      margin-top: 20px;
+      font-size: 13px;
+      color: #888;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <div class="icon">❌</div>
+
+    <h1>Payment Failed</h1>
+
+    <p>
+      Unfortunately, your payment could not be processed.<br>
+      Please check your details and try again.
+    </p>
+
+    <button class="btn btn-primary" onclick="window.location.href='/donate'">
+      Try Again
+    </button>
+
+    <button class="btn btn-secondary" onclick="window.location.href='/'">
+      Go Home
+    </button>
+
+    <div class="support">
+      Need help? Contact support
+    </div>
+  </div>
+
+</body>
+</html>

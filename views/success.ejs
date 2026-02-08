@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Donation Receipt</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
+      background: #f4f6f8;
+      padding: 40px;
+    }
+
+    .receipt-card {
+      background: #ffffff;
+      max-width: 600px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      padding: 30px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .header h2 {
+      margin: 0;
+      color: #2d3748;
+    }
+
+    .header p {
+      margin: 5px 0 0;
+      color: #718096;
+      font-size: 14px;
+    }
+
+    .divider {
+      border-top: 1px dashed #e2e8f0;
+      margin: 20px 0;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
+      color: #2d3748;
+      font-size: 15px;
+    }
+
+    .row span {
+      color: #718096;
+    }
+
+    .amount {
+      font-size: 22px;
+      font-weight: bold;
+      color: #16a34a;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      color: #4a5568;
+      font-size: 14px;
+    }
+
+    .actions {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    button {
+      background: #0d6efd;
+      border: none;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    button.secondary {
+      background: #6b7280;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+      }
+      .actions {
+        display: none;
+      }
+      .receipt-card {
+        box-shadow: none;
+        border-radius: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="receipt-card">
+  <div class="header">
+    <h2>KIAN Foundation Donation Receipt</h2>
+    <p>Thank you for supporting our cause</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="row">
+    <span>Receipt No</span>
+    <b><%= payment._id %></b>
+  </div>
+
+  <div class="row">
+    <span>Payment ID</span>
+    <b><%= payment.paymentId %></b>
+  </div>
+
+  <div class="row">
+    <span>Date</span>
+    <b><%= payment.createdAt.toDateString() %></b>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="row">
+    <span>Amount Paid</span>
+    <b class="amount">₹<%= payment.amount %></b>
+  </div>
+
+  <div class="row">
+    <span>Status</span>
+    <b><%= payment.status %></b>
+  </div>
+
+  <div class="footer">
+    This is a system generated receipt and does not require a signature.
+  </div>
+</div>
+
+<div class="actions">
+  <button onclick="window.print()">Print Receipt</button>
+  <button class="secondary" onclick="window.location.href='/'">Go Home</button>
+</div>
+
+</body>
+</html>

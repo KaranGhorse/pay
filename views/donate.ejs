@@ -2,35 +2,480 @@
 <html>
 <head>
   <title>Donate</title>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
+<style>
+        :root {
+            --primary-color: #6c5ce7;
+            --primary-hover: #5445d4;
+            --background-light: #f4f7f6;
+            --background-dark: #e0e4e7;
+            --text-dark: #333;
+            --text-light: #666;
+            --border-color: #ddd;
+            --error-color: #e74c3c;
+            --success-color: #2ecc71;
+            --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.05);
+            --shadow-medium: 0 8px 25px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+            --transition-speed: 0.3s;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--background-dark) 0%, var(--background-light) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        .donation-container {
+            background-color: #ffffff;
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: var(--shadow-medium);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInScale 0.6s ease-out forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .donation-container::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+            opacity: 0.05;
+            border-radius: 50%;
+            animation: pulse 4s infinite ease-in-out;
+            z-index: 0;
+        }
+
+        .donation-container::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            right: -50px;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, var(--success-color) 0%, transparent 70%);
+            opacity: 0.05;
+            border-radius: 50%;
+            animation: pulse 3s infinite reverse ease-in-out;
+            z-index: 0;
+        }
+
+        @keyframes fadeInScale {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.9); opacity: 0.05; }
+            50% { transform: scale(1.1); opacity: 0.1; }
+            100% { transform: scale(0.9); opacity: 0.05; }
+        }
+
+        .donation-title {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .donation-subtitle {
+            font-size: 1.1em;
+            color: var(--text-light);
+            margin-bottom: 30px;
+            line-height: 1.5;
+            position: relative;
+            z-index: 1;
+        }
+
+        .amount-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .amount-btn {
+            background-color: var(--background-light);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            outline: none;
+            position: relative;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+        }
+
+        .amount-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+            opacity: 0;
+            transform: scale(0);
+            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .amount-btn:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-light);
+            color: var(--primary-color);
+        }
+
+        .amount-btn:hover::before {
+            transform: scale(1);
+            opacity: 0.1;
+        }
+
+        .amount-btn.selected {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-medium);
+            transform: translateY(-5px);
+            animation: popIn var(--transition-speed) ease forwards;
+            z-index: 2;
+        }
+
+        .amount-btn.selected::before {
+            opacity: 0;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .custom-amount-wrapper {
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 12px 20px;
+            background-color: var(--background-light);
+            transition: all var(--transition-speed) ease;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .input-group:focus-within {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+            background-color: #fff;
+        }
+
+        .rupee-symbol {
+            font-size: 1.4em;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-right: 10px;
+            user-select: none;
+        }
+
+        .custom-amount-input {
+            flex-grow: 1;
+            border: none;
+            outline: none;
+            padding: 5px 0;
+            font-size: 1.2em;
+            color: var(--text-dark);
+            background: transparent;
+            -moz-appearance: textfield;
+        }
+
+        .custom-amount-input::placeholder {
+            color: var(--text-light);
+            opacity: 0.7;
+        }
+
+        .custom-amount-input::-webkit-outer-spin-button,
+        .custom-amount-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .min-amount-info {
+            font-size: 0.9em;
+            color: var(--text-light);
+            margin-top: 10px;
+            text-align: right;
+            padding-right: 5px;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.95em;
+            margin-top: 10px;
+            text-align: left;
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+            transition: opacity var(--transition-speed) ease, height var(--transition-speed) ease, margin-top var(--transition-speed) ease;
+        }
+
+        .error-message.active {
+            opacity: 1;
+            height: auto;
+            margin-top: 10px;
+        }
+
+        .donate-btn {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 18px 30px;
+            font-size: 1.3em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: var(--shadow-light);
+            outline: none;
+            position: relative;
+            z-index: 1;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .donate-btn:hover:not(:disabled) {
+            background-color: var(--primary-hover);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .donate-btn:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: var(--shadow-light);
+        }
+
+        .donate-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            box-shadow: none;
+            opacity: 0.8;
+            transform: none;
+        }
+
+        @media (max-width: 600px) {
+            .donation-container {
+                padding: 30px 20px;
+                width: 95%;
+            }
+
+            .donation-title {
+                font-size: 1.8em;
+            }
+
+            .donation-subtitle {
+                font-size: 1em;
+                margin-bottom: 20px;
+            }
+
+            .amount-selection {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+
+            .amount-btn {
+                padding: 12px 15px;
+                font-size: 1em;
+            }
+
+            .custom-amount-input {
+                font-size: 1.1em;
+            }
+
+            .input-group {
+                padding: 10px 15px;
+            }
+
+            .rupee-symbol {
+                font-size: 1.2em;
+            }
+
+            .donate-btn {
+                font-size: 1.1em;
+                padding: 15px 25px;
+            }
+        }
+    </style>
 <body>
 
-<h2>Donate</h2>
+<!-- <h2>Select Donation Amount</h2>
 
 <button onclick="pay(500)">₹500</button>
 <button onclick="pay(1000)">₹1000</button>
+<button onclick="pay(2000)">₹2000</button> -->
 
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
+
+
+<div class="donation-container">
+        <h1 class="donation-title">Support a Cause</h1>
+        <p class="donation-subtitle">Make a meaningful difference with your contribution today.</p>
+
+        <div class="amount-selection">
+            <button type="button" class="amount-btn" data-amount="500" onclick="pay(500)">₹500</button>
+            <button type="button" class="amount-btn" data-amount="1000" onclick="pay(1000)">₹1,000</button>
+            <button type="button" class="amount-btn" data-amount="2000" onclick="pay(2000)">₹2,000</button>
+            <button type="button" class="amount-btn" data-amount="5000" onclick="pay(5000)">₹5,000</button>
+            <button type="button" class="amount-btn" data-amount="10000" onclick="pay(10000)">₹10,000</button>
+        </div>
+
+        <div class="custom-amount-wrapper">
+            <label for="customAmount" class="sr-only">Custom Amount</label>
+            <div class="input-group">
+                <span class="rupee-symbol">₹</span>
+                <input type="number" id="customAmount" onchange="checkAmount()" class="custom-amount-input" placeholder="Enter custom amount" min="100" inputmode="numeric" pattern="[0-9]*" value="">
+            </div>
+            <p class="min-amount-info">Minimum donation: ₹100</p>
+            <p class="error-message" id="amountError"></p>
+        </div>
+
+        <button type="button" class="donate-btn" id="donateButton"  disabled>Donate Now</button>
+        <input type="hidden" id="selectedDonationAmount" name="donationAmount" value="">
+    </div>
+
 <script>
-function pay(amount) {
-  fetch("/create-order", {
+
+  const donateButton = document.getElementById("donateButton");
+function checkAmount() {
+  const customAmountInput = document.getElementById("customAmount");
+  const errorMessage = document.getElementById("amountError");
+  const selectedAmountInput = document.getElementById("selectedDonationAmount");
+
+  const amount = parseInt(customAmountInput.value);
+
+  if (isNaN(amount) || amount < 100) {
+    errorMessage.textContent = "Please enter a valid amount of ₹100 or more.";
+    errorMessage.classList.add("active");
+    donateButton.disabled = true;
+    selectedAmountInput.value = "";
+  } else {
+    errorMessage.textContent = "";
+    errorMessage.classList.remove("active");
+    donateButton.disabled = false;
+    selectedAmountInput.value = amount;
+  }
+}
+
+donateButton.addEventListener("click", () => {
+let selectedAmount = document.getElementById("customAmount").value;
+  if (selectedAmount >= 100) {
+    pay(selectedAmount);
+  }
+});
+
+async function pay(amount) {
+
+    if (amount < 100) {
+      alert("Minimum donation amount is ₹100.");
+      return;
+    }
+
+  const res = await fetch("/create-order", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ amount })
-  })
-  .then(res => res.json())
-  .then(order => {
-    var options = {
-      key: "<%= process.env.RAZORPAY_KEY_ID %>",
-      amount: order.amount,
-      currency: "INR",
-      order_id: order.id,
-      handler: function (response) {
-        window.location.href = "/success";
-      }
-    };
-    new Razorpay(options).open();
   });
+
+  const order = await res.json();
+
+  if (!res.ok) {
+    alert(order.error || "Failed to create order. Please try again.");
+    window.location.href = "/failed";
+    return;
+  }
+  
+  const options = {
+    key: "<%= key %>",
+    amount: order.amount,
+    currency: "INR",
+    order_id: order.id,
+
+    handler: async function (response) {
+      const verify = await fetch("/verify-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          razorpay_order_id: response.razorpay_order_id,
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_signature: response.razorpay_signature,
+          amount: amount
+        })
+      });
+
+      const data = await verify.json();
+
+      if (data.success) {
+        window.location.href = `/success/${data.id}`;
+      } else {
+        window.location.href = "/failed";
+      }
+    }
+  };
+
+  new Razorpay(options).open();
 }
 </script>
 
